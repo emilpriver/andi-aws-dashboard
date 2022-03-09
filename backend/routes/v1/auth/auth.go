@@ -11,6 +11,7 @@ func AuthRoutes(router *gin.RouterGroup) {
 		githubRoutes := r.Group("/github")
 		{
 			githubRoutes.GET("/login", github.GithubLoginRedirect)
+			githubRoutes.GET("/callback", github.GithubLoginCallback)
 		}
 	}
 }
