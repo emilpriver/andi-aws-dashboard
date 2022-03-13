@@ -13,7 +13,7 @@ func GithubLoginRedirect(c *gin.Context) {
 	githubRediretUri := utils.GetGithubClientRedirectUri()
 
 	redirectURL := fmt.Sprintf(
-		"https://github.com/login/oauth/authorize?client_id=%s&redirect_uri=%s&scope=user",
+		"https://github.com/login/oauth/authorize?client_id=%s&redirect_uri=%s&scope=user&allow_signup=true",
 		githubClientID,
 		githubRediretUri,
 	)
