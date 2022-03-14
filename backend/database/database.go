@@ -8,21 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type GithubUser struct {
-	gorm.Model
-	GithubID int64 `gorm:"uniqueIndex"`
-	Username string
-}
-
-type User struct {
-	gorm.Model
-	Email    string
-	Username string
-	Avatar   string
-	Github   GithubUser
-	GithubID int
-}
-
 var DB *gorm.DB
 
 func Init() {
@@ -45,13 +30,25 @@ func Init() {
 
 	err = DB.AutoMigrate(&User{})
 	if err != nil {
-		fmt.Print("Error on auto migrate")
+		fmt.Print("Error on auto migrate for User")
 		return
 	}
 
 	err = DB.AutoMigrate(&GithubUser{})
 	if err != nil {
-		fmt.Print("Error on auto migrate")
+		fmt.Print("Error on auto migrate for GithubUser")
+		return
+	}
+
+	err = DB.AutoMigrate(&Team{})
+	if err != nil {
+		fmt.Print("Error on auto migrate for teams")
+		return
+	}
+
+	err = DB.AutoMigrate(&App{})
+	if err != nil {
+		fmt.Print("Error on auto migrate for teams")
 		return
 	}
 }

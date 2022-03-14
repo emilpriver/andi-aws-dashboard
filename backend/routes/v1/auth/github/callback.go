@@ -11,6 +11,7 @@ import (
 	"github.com/Andi-App/Andi/integration"
 	"github.com/Andi-App/Andi/utils"
 	"github.com/gin-gonic/gin"
+	"github.com/gosimple/slug"
 )
 
 func GithubLoginCallback(c *gin.Context) {
@@ -54,8 +55,6 @@ func GithubLoginCallback(c *gin.Context) {
 		Where("github_users.github_id = ?", ghUser.ID).
 		Find(&user)
 
-	fmt.Println(user.ID)
-
 	if user.ID == 0 {
 		newUser := &database.User{
 			Email:    ghUser.Email,
@@ -73,6 +72,18 @@ func GithubLoginCallback(c *gin.Context) {
 		if result.Error != nil {
 			panic("Couldn't create Github User")
 		}
+
+		newTeamSlug := slug.Make(ghUser.Login)
+		newTeam := &database.Team{
+			Name:  ghUser.Login,
+			Slug:  newTeamSlug,
+			Users: []*database.User{newUser},
+		}
+
+		database.DB.
+			Create(&newTeam).
+			Association("Apps").
+			Append(&newUser)
 
 		user = *newUser
 	}
