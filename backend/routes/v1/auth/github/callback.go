@@ -1,13 +1,16 @@
 package github
 
 import (
-	"errors"
+	"fmt"
 	"net/http"
+	"os"
+	"strconv"
+	"time"
 
 	"github.com/Andi-App/Andi/database"
 	"github.com/Andi-App/Andi/integration"
+	"github.com/Andi-App/Andi/utils"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 func GithubLoginCallback(c *gin.Context) {
@@ -42,11 +45,18 @@ func GithubLoginCallback(c *gin.Context) {
 		return
 	}
 
-	user := database.GithubUser{}
+	user := database.User{}
 
-	result := database.DB.First(&user, "github_id = ?", ghUser.ID)
+	database.DB.
+		Preload("github_users").
+		Table("users").
+		Joins("INNER JOIN github_users ON (github_users.id = users.github_id)").
+		Where("github_users.github_id = ?", ghUser.ID).
+		Find(&user)
 
-	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+	fmt.Println(user.ID)
+
+	if user.ID == 0 {
 		newUser := &database.User{
 			Email:    ghUser.Email,
 			Username: ghUser.Login,
@@ -57,14 +67,47 @@ func GithubLoginCallback(c *gin.Context) {
 			},
 		}
 
-		result := database.DB.Create(&newUser)
+		result := database.DB.
+			Create(&newUser)
 
 		if result.Error != nil {
 			panic("Couldn't create Github User")
 		}
+
+		user = *newUser
 	}
 
-	c.JSON(http.StatusBadRequest, gin.H{
-		"UserID": user.Username,
-	})
+	if user.ID == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error fetching user",
+		})
+
+		return
+	}
+
+	jwt, err := utils.GenerateJWT(&user, "github")
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Error generating JWT token",
+		})
+	}
+
+	domainSecure, _ := strconv.ParseBool(os.Getenv("FRONTEND_COOKIE_SECURE"))
+	c.SetCookie(
+		"token",
+		jwt.Token,
+		int(jwt.Expires.Sub(time.Now()).Seconds()),
+		"/",
+		os.Getenv("FRONTEND_DOMAIN"),
+		domainSecure,
+		true,
+	)
+
+	redirectURL := fmt.Sprintf(
+		"%v/dashboard",
+		os.Getenv("FRONTEND_DOMAIN"),
+	)
+
+	c.Redirect(http.StatusTemporaryRedirect, redirectURL)
 }

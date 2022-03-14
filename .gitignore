@@ -557,4 +557,8 @@ MigrationBackup/
 
 .env
 
+# custom
+postgres-data/*
+!postgres-data/.gitkeep
+
 
