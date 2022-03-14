@@ -10,8 +10,7 @@ import (
 
 type GithubUser struct {
 	gorm.Model
-	ID       int
-	GithubID int
+	GithubID int64 `gorm:"uniqueIndex"`
 	Username string
 }
 
@@ -24,6 +23,8 @@ type User struct {
 	GithubID int
 }
 
+var DB *gorm.DB
+
 func Init() {
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Europe/Stockholm",
@@ -34,19 +35,21 @@ func Init() {
 		os.Getenv("POSTGRES_PORT"),
 	)
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	initDB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		panic("failed to connect database")
 	}
 
-	err = db.AutoMigrate(&User{})
+	DB = initDB
+
+	err = DB.AutoMigrate(&User{})
 	if err != nil {
 		fmt.Print("Error on auto migrate")
 		return
 	}
 
-	err = db.AutoMigrate(&GithubUser{})
+	err = DB.AutoMigrate(&GithubUser{})
 	if err != nil {
 		fmt.Print("Error on auto migrate")
 		return

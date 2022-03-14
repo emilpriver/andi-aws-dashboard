@@ -10,11 +10,12 @@ import (
 
 func GithubLoginRedirect(c *gin.Context) {
 	githubClientID := utils.GetGithubClientID()
+	githubRediretUri := utils.GetGithubClientRedirectUri()
 
 	redirectURL := fmt.Sprintf(
-		"https://github.com/login/oauth/authorize?client_id=%s&redirect_uri=%s",
+		"https://github.com/login/oauth/authorize?client_id=%s&redirect_uri=%s&scope=user&allow_signup=true",
 		githubClientID,
-		"http://localhost:4000/api/v1/aut/github/callback",
+		githubRediretUri,
 	)
 
 	c.Redirect(http.StatusTemporaryRedirect, redirectURL)
