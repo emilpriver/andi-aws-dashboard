@@ -1,7 +1,7 @@
 package router
 
 import (
-	v1 "github.com/Andi-App/Andi/routes/v1"
+	v1 "github.com/emilpriver/andi-aws-dashboard/routes/v1"
 	"github.com/gin-gonic/gin"
 )
 

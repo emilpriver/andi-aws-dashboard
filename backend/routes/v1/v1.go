@@ -1,7 +1,7 @@
 package v1
 
 import (
-	v1Auth "github.com/Andi-App/Andi/routes/v1/auth"
+	v1Auth "github.com/emilpriver/andi-aws-dashboard/routes/v1/auth"
 	"github.com/gin-gonic/gin"
 )
 

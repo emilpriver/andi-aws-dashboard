@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Andi-App/Andi/utils"
+	"github.com/emilpriver/andi-aws-dashboard/utils"
 	"github.com/gin-gonic/gin"
 )
 

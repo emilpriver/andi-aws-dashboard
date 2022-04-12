@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Andi-App/Andi/database"
-	"github.com/Andi-App/Andi/integration"
-	"github.com/Andi-App/Andi/utils"
+	"github.com/emilpriver/andi-aws-dashboard/database"
+	"github.com/emilpriver/andi-aws-dashboard/integration"
+	"github.com/emilpriver/andi-aws-dashboard/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/gosimple/slug"
 )

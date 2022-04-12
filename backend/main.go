@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/Andi-App/Andi/database"
-	router "github.com/Andi-App/Andi/routes"
-	"github.com/Andi-App/Andi/utils"
+	"github.com/emilpriver/andi-aws-dashboard/database"
+	router "github.com/emilpriver/andi-aws-dashboard/routes"
+	"github.com/emilpriver/andi-aws-dashboard/utils"
 )
 
 func main() {

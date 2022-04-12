@@ -8,8 +8,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Andi-App/Andi/types"
-	"github.com/Andi-App/Andi/utils"
+	"github.com/emilpriver/andi-aws-dashboard/types"
+	"github.com/emilpriver/andi-aws-dashboard/utils"
 )
 
 func GithubGetUserAccessToken(callbackCode string) (string, error) {
@@ -40,7 +40,7 @@ func GithubGetUserAccessToken(callbackCode string) (string, error) {
 	request.Header.Set("Accept", "application/json")
 
 	if err != nil {
-		log.Fatal(err)
+		return "", errors.New("Failed to get access token")
 	}
 
 	response, err := client.Do(request)

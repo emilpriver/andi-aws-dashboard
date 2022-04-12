@@ -1,4 +1,4 @@
-module github.com/Andi-App/Andi
+module github.com/emilpriver/andi-aws-dashboard
 
 go 1.16
 

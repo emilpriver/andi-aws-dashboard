@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/Andi-App/Andi/database"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/emilpriver/andi-aws-dashboard/database"
 )
 
 type Jwt struct {
